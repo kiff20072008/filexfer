@@ -39,4 +39,4 @@ target_link_libraries(unit_tests PRIVATE filexfer_core)
 enable_testing()
 add_test(NAME unit COMMAND unit_tests)
 add_test(NAME integration
-         COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_tests.sh $<TARGET_FILE:filexfer>)
+         COMMAND bash ${CMAKE_CURRENT_SOURCE_DIR}/tests/run_tests.sh $<TARGET_FILE:filexfer>)

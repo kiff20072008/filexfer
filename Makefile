@@ -39,7 +39,7 @@ asan:
 
 test: all unit
 	$(UNIT)
-	./tests/run_tests.sh ./$(TARGET)
+	bash tests/run_tests.sh ./$(TARGET)
 
 clean:
 	rm -rf $(BUILD) $(TARGET) tests/tmp

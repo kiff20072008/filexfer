@@ -22,7 +22,7 @@ jobs:
             target: asan
     name: ${{ matrix.name }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       # ASan несовместим с высокой энтропией ASLR на новых ядрах runner-ов
       - name: Tune ASLR for sanitizers
@@ -36,12 +36,12 @@ jobs:
         run: ./build/unit_tests
 
       - name: Integration tests
-        run: ./tests/run_tests.sh ./filexfer
+        run: bash tests/run_tests.sh ./filexfer
 
   cmake:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Configure
         run: cmake -S . -B build
       - name: Build
