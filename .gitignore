@@ -1,0 +1,16 @@
+# build
+/build/
+/filexfer
+*.o
+
+# received files and test artefacts
+*.hex
+*.hex.part
+/tests/tmp/
+
+# editors
+.vscode/
+.idea/
+
+# assignment document (not part of the solution)
+*.docx

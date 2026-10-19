@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: gcc
+            cxx: g++
+            target: all unit
+          - name: clang
+            cxx: clang++
+            target: all unit
+          - name: gcc + ASan/UBSan
+            cxx: g++
+            target: asan
+    name: ${{ matrix.name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      # ASan несовместим с высокой энтропией ASLR на новых ядрах runner-ов
+      - name: Tune ASLR for sanitizers
+        if: matrix.target == 'asan'
+        run: sudo sysctl -w vm.mmap_rnd_bits=28
+
+      - name: Build
+        run: make ${{ matrix.target }} CXX=${{ matrix.cxx }} WARN="-std=c++17 -Wall -Wextra -Wpedantic -Wshadow -Werror"
+
+      - name: Unit tests
+        run: ./build/unit_tests
+
+      - name: Integration tests
+        run: ./tests/run_tests.sh ./filexfer
+
+  cmake:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure
+        run: cmake -S . -B build
+      - name: Build
+        run: cmake --build build
+      - name: Test
+        run: ctest --test-dir build --output-on-failure
